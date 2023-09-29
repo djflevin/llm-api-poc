@@ -2,7 +2,7 @@ import openai
 import json
 from dataclasses import dataclass
 from api_request import send_api_request
-from utilities import load_openapi_file, read_workflow_file, WorkflowStep, DebugValues, PromptPreprocessor
+from utilities import DebugValues, PromptPreprocessor
 from datetime import datetime, date
 from typing import Optional
 
@@ -87,50 +87,3 @@ def data_wrapper(context: str, action: str) -> str:
         print(f"\nData Manipulation from LLM:\n{result}\n")
     return result
 
-def workflow_step_handler(context: list, openapi_doc: str, api_prompt: str, data_manipulation_prompt: Optional[str] = None):
-    """
-    Fetches response from API from OpenAPI document + user prompt, and then executes one manipulation
-    of the response based on a second user prompt.
-    """
-    api_result = openapi_wrapper(
-        '\n'.join((context + [openapi_doc])),
-        api_prompt)
-    
-
-    if(data_manipulation_prompt is not None):
-        data_result = data_wrapper(
-            '\n'.join(context + [api_result]),
-            data_manipulation_prompt)
-    else:
-        data_result = None
-    
-    return data_result
-
-
-
-def workflow_supervisor(workflow_steps: list[WorkflowStep]):
-    """
-    Iterates through each workflow step (one API call and one data manipulation)
-    """
-    context = []
-    for step in workflow_steps:
-        if(DebugValues.verbose_logging):
-            print(f"Step: {step.step_id}")
-            print(f"Description: {step.step_desc}")
-        workflow_output = workflow_step_handler(context, step.openapi_doc, step.api_prompt, step.data_prompt)
-        context.append(workflow_output)
-    return context
-
-
-if __name__ == "__main__":
-    import os
-    from dotenv import load_dotenv
-    load_dotenv()
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-
-    # Get workflow steps from JSON
-    workflow_steps = read_workflow_file("workflow.json")
-
-    context_history = workflow_supervisor(workflow_steps)
-    print(f"Context\n{context_history}") # Print for debug purposes.
-    print("\nDone.")
