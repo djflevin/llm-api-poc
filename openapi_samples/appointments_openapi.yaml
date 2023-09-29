@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: Appointments API
+  version: 1.0.11
+  description: This is a sample API for interacting with an appointments system.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:3000/appointments
+paths:
+  /availability:
+    summary: Find available slots for booking.
+    get:
+      summary: Returns a list of available slots for appointments within a date range.
+      description: ''
+      operationId: GetAvailability
+      parameters: 
+        - name: startdate
+          in: query
+          description: The starting date of the range for which to check availability.
+          required: true
+          schema:
+            type: string
+            format: date  # Assuming the date format is "YYYY-MM-DD"
+        - name: enddate
+          in: query
+          description: The ending date of the range for which to check availability.
+          required: true
+          schema:
+            type: string
+            format: date  # Assuming the date format is "YYYY-MM-DD"
+        - name: duration
+          in: query
+          description: Duration of the appointment slot in minutes.
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Default error sample response
+

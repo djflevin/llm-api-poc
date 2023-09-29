@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: Email Service API
+  version: 1.0.0
+  description: A simple API for sending emails.
+servers:
+  - url: http://localhost:3000/email
+paths:
+  /send:
+    post:
+      summary: Send an email.
+      description: Use this endpoint to send an email.
+      operationId: sendEmail
+      requestBody:
+        description: Email data to be sent.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - to
+                - subject
+                - body
+              properties:
+                to:
+                  type: string
+                  description: Recipient email address.
+                  example: recipient@example.com
+                cc:
+                  type: array
+                  description: Carbon copy email addresses.
+                  items:
+                    type: string
+                  example:
+                    - cc1@example.com
+                    - cc2@example.com
+                bcc:
+                  type: array
+                  description: Blind carbon copy email addresses.
+                  items:
+                    type: string
+                  example:
+                    - bcc1@example.com
+                subject:
+                  type: string
+                  description: Email subject.
+                  example: Test Subject
+                body:
+                  type: string
+                  description: Email body/content.
+                  example: This is the body of the email.
+      responses:
+        '200':
+          description: Email sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                example:
+                  status: success
+                  message: Email sent successfully.
+        '400':
+          description: Bad request (e.g. missing required parameters).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                example:
+                  status: error
+                  message: Invalid email data provided.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                example:
+                  status: error
+                  message: Unable to send email.

@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Patients API
+  version: 1.0.11
+  description: This is a sample API for retrieving a patient's details.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:3000/patients
+paths:
+  /Patient:
+    get:
+      summary: Search for a patient.
+      description: Use this endpoint to search for a patient.
+      operationId: search-patient
+      parameters:
+        - name: family
+          in: query
+          description: >-
+            The patient's family name (surname).
+
+            Not case sensitive.
+            Use `*` as a wildcard but not in the first two characters and not in fuzzy search mode.
+            Must be [URL encoded](https://en.wikipedia.org/wiki/Percent-encoding), for example a space must be represented by either `%20` or `+` and a wildcard must be encoded as `%2A`.
+          examples:
+            simple:
+              value: Smith
+              summary: Matches Smythe if `_fuzzy-match` is specified.
+            wildcarded:
+              value: Sm*t*
+              summary: Wildcards must contain at least two characters, this matches Smith, Smythe
+          schema:
+            type: string
+
+        - name: given
+          in: query
+          description: >-
+            The patient's given names.
+
+            Not case sensitive.
+            Use `*` as a wildcard but not in the first two characters and not in fuzzy search mode.
+            Must be [URL encoded](https://en.wikipedia.org/wiki/Percent-encoding), for example a space must be represented by either `%20` or `+` and a wildcard must be encoded as `%2A`.
+            
+            A patient may have more than one given name. Subsequent given names are commonly referred to as 'middle names'.
+            Specify multiple given names by repeating this parameter.
+            To search for `Jane Anne Smith` use `given=Jane&given=Anne&family=Smith`.
+            
+            The first given name may be a [compound name](https://en.wikipedia.org/wiki/Given_name#Compound), for example `John Paul`.
+            To search for `John Paul James Smith` (where `John Paul` is the first given name, `James` is the second given name, and `Smith` the family name) use `given=John%20Paul&given=James&family=Smith`.
+            
+            Note that it is not necessary to specify subsequent given (middle) names, and that doing so may impact your search results in the case they are not recorded in the demographics system.
+          example: Jane
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+
+        - name: gender
+          in: query
+          description: Gender with which the patient most strongly identifies.
+          example: female
+          required: false
+          schema:
+            type: string
+            enum:
+              - male
+              - female
+              - other
+              - unknown
+
+        - name: birthdate
+          in: query
+          description: >-
+            Date of birth in the format `<eq|ge|le>yyyy-mm-dd`. To specify a range, use `birthdate=geyyyy-mm-dd&birthdate=leyyyy-mm-dd`.
+          examples:
+            simple:
+              value: eq2010-10-22
+              description: Exact match date
+            rangege:
+              value: ge2010-10-22
+              description: Greater than or equals match, which matches 2010-10-22 or 2010-10-23
+            rangele:
+              value: le2010-10-22
+              description: Less than or equals match, which matches 2010-10-22 or 2010-10-21
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+
+        # New parameters
+        - name: general-practitioner
+          in: query
+          description: >-
+            The Organisation Data Service (ODS) code of the patient's registered GP practice.
+
+            Not case sensitive.
+            For a fuzzy search, this is ignored for matching but included in the score calculation.
+          example: Y12345
+          required: false
+          schema:
+            type: string
+
+        - name: email
+          in: query
+          description: Email address
+          example: jane.smith@example.com
+          required: false
+          schema:
+            type: string
+
+        - name: phone
+          in: query
+          description: Phone number
+          example: 01632960587
+          required: false
+          schema:
+            type: string
+
+      responses:
+        default:
+          description: Default error sample response
