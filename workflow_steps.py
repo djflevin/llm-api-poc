@@ -42,8 +42,8 @@ class ApiDataStep(WorkflowStep):
         else:
             return api_result
 
-class AskStep(WorkflowStep):
-    type = "ask"
+class CLIAskStep(WorkflowStep):
+    type = "cli_ask"
 
     def __init__(self, step_id: str, step_description:str, question: str, answer_key: str) -> None:
         super().__init__(step_id, step_description)
@@ -54,8 +54,22 @@ class AskStep(WorkflowStep):
         user_response = input(self.question)
         return f"{{ {self.answer_key} : '{user_response}' }}"
     
+class TextInputStep(WorkflowStep):
+    type = "ask"
+
+    def __init__(self, step_id: str, step_description:str, question: str, answer_key: str) -> None:
+        super().__init__(step_id, step_description)
+        self.question = question
+        self.answer_key = answer_key
+    
+    def run(self, user_input: str):
+        return f"{{ {self.answer_key} : '{user_input}' }}"
+
+
+    
 class Workflow:
     context = []
+    log = []
 
     def __init__(self, workflow_steps: list[WorkflowStep]) -> None:
         self.steps = workflow_steps
@@ -69,11 +83,18 @@ class Workflow:
             match (step.type):
                 case ApiDataStep.type:
                     output = step.run(context=self.context)
-                case AskStep.type:
+                case CLIAskStep.type:
                     output = step.run()
+                case TextInputStep.type:
+                    raise ValueError("Standard workflow class does not support TextInputStep.")
                 case _:
                     # Handle undefined step types
                     #TODO Create a proper error
                     raise ValueError
             self.context.append(output)
+            self.log.append({
+                "step_id": step.step_id,
+                "step_description": step.description,
+                "output": output
+            })
         return
