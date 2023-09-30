@@ -1,6 +1,15 @@
 from dataclasses import dataclass
 from typing import Callable
 
+def load_apikey_from_env():
+    """
+    Load the OpenAI API key from the environment.
+    """
+    import os
+    import openai
+    from dotenv import load_dotenv
+    load_dotenv()
+    openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class DebugValues:
     verbose_logging = True
