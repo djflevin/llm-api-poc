@@ -50,12 +50,12 @@ class CLIAskStep(WorkflowStep):
         self.question = question
         self.answer_key = answer_key
     
-    def run(self):
+    def run(self, context: list[str]):
         user_response = input(self.question)
         return f"{{ {self.answer_key} : '{user_response}' }}"
     
 class TextInputStep(WorkflowStep):
-    type = "ask"
+    type = "gui_ask"
 
     def __init__(self, step_id: str, step_description:str, question: str, answer_key: str) -> None:
         super().__init__(step_id, step_description)
@@ -80,17 +80,7 @@ class Workflow:
             if(DebugValues.verbose_logging):
                 print(f"\nStep: {step.step_id}")
                 print(f"Description: {step.description}")
-            match (step.type):
-                case ApiDataStep.type:
-                    output = step.run(context=self.context)
-                case CLIAskStep.type:
-                    output = step.run()
-                case TextInputStep.type:
-                    raise ValueError("Standard workflow class does not support TextInputStep.")
-                case _:
-                    # Handle undefined step types
-                    #TODO Create a proper error
-                    raise ValueError
+            output = step.run(self.context)
             self.context.append(output)
             self.log.append({
                 "step_id": step.step_id,
