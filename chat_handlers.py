@@ -21,7 +21,7 @@ def llm_handler(behaviour: str, context: str, raw_action: str, response_schema: 
 
     if response_schema:
         completion = openai.ChatCompletion.create(
-            model="gpt-4-0613",
+            model="gpt-3.5-turbo-0613",
             messages=[
             {"role": "system", "content": behaviour},
             {"role": "system", "content": context},
@@ -33,7 +33,7 @@ def llm_handler(behaviour: str, context: str, raw_action: str, response_schema: 
             )
     else:
         completion = openai.ChatCompletion.create(
-            model="gpt-4-0613",
+            model="gpt-3.5-turbo-0613",
             messages=[
             {"role": "system", "content": behaviour},
             {"role": "system", "content": context},

@@ -1,5 +1,5 @@
 import json
-from workflow_steps import ApiDataStep, CLIAskStep, Workflow
+from workflow_steps import ApiDataStep, CLIAskStep, TextInputStep, Workflow
 
 def load_openapi_file(filename: str) -> str:
     with open(filename, 'r') as f:
@@ -26,6 +26,13 @@ def read_workflow_file(file_path):
                     )
             case CLIAskStep.type:
                 new_step = CLIAskStep(
+                    step_data["step_id"],
+                    step_data["step_desc"],
+                    step_data["question"],
+                    step_data["answer_key"],
+                )
+            case TextInputStep.type:
+                new_step = TextInputStep(
                     step_data["step_id"],
                     step_data["step_desc"],
                     step_data["question"],
