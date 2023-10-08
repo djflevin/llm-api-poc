@@ -2,7 +2,7 @@
     "workflow_steps": [
         {
             "step_id" : "000",
-            "step_type" : "cli_ask",
+            "step_type" : "ask",
             "step_desc" : "Ask patient name.",
             "question" : "Enter the patient's name:  ",
             "answer_key" : "name"
@@ -11,7 +11,7 @@
             "step_id" : "001",
             "step_type" : "api_access_manipulate", 
             "step_desc" : "First step.",
-            "openapi_file_location": "openapi_samples/appointments_openapi.yaml",
+            "openapi_file_location": "../openapi_samples/appointments_openapi.yaml",
             "instruction": "Get available slots for next week starting from Monday. Today's date is ##TODAY##.",
             "manipulation": "Select earliest slot."
         },
@@ -19,7 +19,7 @@
             "step_id" : "002",
             "step_type" : "api_access_manipulate", 
             "step_desc" : "Second step.",
-            "openapi_file_location": "openapi_samples/patients_openapi.yaml",
+            "openapi_file_location": "../openapi_samples/patients_openapi.yaml",
             "instruction": "Find the details of the patient.",
             "manipulation": "Get the patient's name and NHS number."
         },
@@ -27,7 +27,7 @@
             "step_id" : "003",
             "step_type" : "api_access_manipulate",
             "step_desc" : "Third and final step!",
-            "openapi_file_location": "openapi_samples/email_openapi.yaml",
+            "openapi_file_location": "../openapi_samples/email_openapi.yaml",
             "instruction": "Send an email to clinicalappointments@nhs.uk to book an appointment for the following details",
             "manipulation": null
         }
