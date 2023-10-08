@@ -32,7 +32,7 @@ with gr.Blocks() as demo:
   with gr.Group():
     with gr.Row():
       question = gr.Textbox(label = "Enter the name of the patient.")
-    run_btn = gr.Button("Run Worflow", variant = "primary", size = "lg")
+    run_btn = gr.Button("Run Workflow", variant = "primary", size = "lg")
     
   with gr.Group():
     with gr.Row():
