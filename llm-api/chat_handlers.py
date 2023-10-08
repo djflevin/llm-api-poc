@@ -1,10 +1,8 @@
 import openai
 import json
-from dataclasses import dataclass
 from api_request import send_api_request
 from utilities import DebugValues, PromptPreprocessor
 from datetime import datetime, date
-from typing import Optional
 
 def llm_handler(behaviour: str, context: str, raw_action: str, response_schema: list[dict[str, str]] = None, call = None):
     """
@@ -56,7 +54,7 @@ def openapi_wrapper(context: str, action: str) -> str:
     """
 
     behaviour = "You are a tool that converts OpenAPI documentation and a user request into an API call."
-    with open("openai_function_schemas/api_request_schema.json", 'r') as f:
+    with open("../openai_function_schemas/api_request_schema.json", 'r') as f:
         api_request_schema = json.load(f)
     response_schema = [{"name":"api_request", "parameters":api_request_schema}]
     calls = {"name":"api_request"}
