@@ -2,7 +2,8 @@ import openai
 import json
 from api_request import send_api_request
 from utilities import DebugValues, PromptPreprocessor
-from datetime import datetime, date
+from datetime import datetime
+import callables
 
 def llm_handler(behaviour: str, context: str, raw_action: str, response_schema: list[dict[str, str]] = None, call = None):
     """
@@ -12,7 +13,7 @@ def llm_handler(behaviour: str, context: str, raw_action: str, response_schema: 
     if DebugValues.verbose_logging:
         print(f"Began API request to OpenAI at {datetime.now().isoformat()}")
     
-    preprocessor = PromptPreprocessor({"TODAY" : date.today().isoformat}) # Hardcoded preprocessor TODO abstract this.
+    preprocessor = PromptPreprocessor(callables.callables) # Hardcoded preprocessor TODO abstract this.
 
     # Substitute commands in action for their values
     action = preprocessor.preprocess_prompt(raw_action)
@@ -54,7 +55,7 @@ def openapi_wrapper(context: str, action: str) -> str:
     """
 
     behaviour = "You are a tool that converts OpenAPI documentation and a user request into an API call."
-    with open("../openai_function_schemas/api_request_schema.json", 'r') as f:
+    with open("openai_function_schemas/api_request_schema.json", 'r') as f:
         api_request_schema = json.load(f)
     response_schema = [{"name":"api_request", "parameters":api_request_schema}]
     calls = {"name":"api_request"}
