@@ -8,7 +8,7 @@ if __name__ == "__main__":
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
     # Get workflow steps from JSON
-    workflow = read_workflow_file("workflow_cli.json")
+    workflow = read_workflow_file("workflow_samples/workflow_cli.json")
 
     workflow.run()
 
