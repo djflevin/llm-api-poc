@@ -68,11 +68,12 @@ class TextInputStep(WorkflowStep):
 
     
 class Workflow:
-    context = []
-    log = []
+
 
     def __init__(self, workflow_steps: list[WorkflowStep]) -> None:
         self.steps = workflow_steps
+        self.context = []
+        self.log = []
         return
 
     def run(self):
